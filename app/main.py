@@ -1,3 +1,4 @@
+import logging
 import math
 from pathlib import Path
 from typing import Any
@@ -8,6 +9,8 @@ from fastapi import Body, FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
+
+logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 MODEL_PATH = PROJECT_ROOT / "model" / "random_forest_ids.joblib"
@@ -89,6 +92,7 @@ def predict(sample: dict[str, Any] = Body(...)):
         prediction_class = int(prediction)
     except Exception:
         # Do not expose model, filesystem, or stack-trace details to API clients.
+        logger.exception("Inference failed")
         raise HTTPException(
             status_code=500,
             detail="Prediction could not be completed",

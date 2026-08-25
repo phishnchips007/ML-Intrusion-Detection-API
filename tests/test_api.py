@@ -66,13 +66,31 @@ def test_known_sample_is_attack_with_model_confidence(client, sample):
     }
 
 
-def test_json_key_order_does_not_change_prediction(client, sample):
+def test_json_key_order_does_not_change_stored_feature_order(
+    client, sample, monkeypatch
+):
+    class ColumnOrderModel:
+        classes_ = [1]
+
+        def predict(self, frame):
+            assert frame.columns.tolist() == main.features
+            return [1]
+
+        def predict_proba(self, frame):
+            assert frame.columns.tolist() == main.features
+            return [[1.0]]
+
+    monkeypatch.setattr(main, "model", ColumnOrderModel())
     reversed_sample = dict(reversed(list(sample.items())))
 
     response = client.post("/predict", json=reversed_sample)
 
     assert response.status_code == 200
-    assert response.json()["class"] == 1
+    assert response.json() == {
+        "prediction": "ATTACK",
+        "class": 1,
+        "confidence": 1.0,
+    }
 
 
 def test_missing_feature_is_rejected(client, sample):
@@ -148,7 +166,7 @@ def test_malformed_json_returns_controlled_error(client):
 
 def test_confidence_uses_predicted_class_position(client, sample, monkeypatch):
     class NonIndexClassModel:
-        classes_ = [7, 1]
+        classes_ = [1, 7]
 
         def predict(self, _frame):
             return [1]
@@ -164,7 +182,7 @@ def test_confidence_uses_predicted_class_position(client, sample, monkeypatch):
     assert response.json() == {
         "prediction": "ATTACK",
         "class": 1,
-        "confidence": 0.2,
+        "confidence": 0.8,
     }
 
 

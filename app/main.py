@@ -27,6 +27,7 @@ async def invalid_request_handler(_request, _exc):
     # Keep malformed JSON and wrong top-level shapes from echoing parser internals.
     return JSONResponse(status_code=422, content={"detail": "Invalid request body"})
 
+
 @app.get("/health")
 def health_check():
     return {"status": "healthy"}

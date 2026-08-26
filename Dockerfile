@@ -1,7 +1,7 @@
-# Verified with `docker buildx imagetools inspect` on 2026-08-25.
-# The index digest keeps the pinned Python 3.11.13 slim Bookworm image portable
+# Verified with `docker buildx imagetools inspect` on 2026-08-26.
+# The index digest keeps the current Python 3.11.16 slim Trixie image portable
 # across supported Docker platforms while fixing the patch release and image.
-FROM python:3.11.13-slim-bookworm@sha256:86adf8dbadc3d6e82ee5dd2c74bec2e1c2467cdad47886280501df722372d2e1
+FROM python:3.11.16-slim-trixie@sha256:be1575ed968de893bd54f4c56315ff7c4736ce522c1bca08fd521731aafc0d76
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -10,7 +10,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 WORKDIR /app
 
 COPY requirements.txt ./requirements.txt
-RUN pip install --no-cache-dir --requirement requirements.txt \
+RUN python -m pip install --no-cache-dir --requirement requirements.txt \
+    && python -m pip uninstall --yes setuptools wheel pip \
     && addgroup --system app \
     && adduser --system --ingroup app app
 

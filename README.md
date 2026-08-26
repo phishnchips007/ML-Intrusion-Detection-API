@@ -571,7 +571,7 @@ ML-Intrusion-Detection-API/
 │
 ├── docs/
 │   ├── architecture.png
-│   ├── ML_IDS_Colab_Notebook.pdf
+│   ├── ML_Intrusion_Detection_Model_Notebook.pdf
 │   │
 │   └── screenshots/
 │       ├── eks-api-demo.png
@@ -628,7 +628,7 @@ Each stage gave me an opportunity to understand another part of taking a machine
 
 For a deeper look at the machine learning portion of the project:
 
-**[Original ML Intrusion Detection Google Colab Notebook (PDF)](docs/ML_IDS_Colab_Notebook.pdf)**
+**[Original ML Intrusion Detection Google Colab Notebook (PDF)](docs/ML_Intrusion_Detection_Model_Notebook.pdf)**
 
 The notebook documents the original dataset preparation, model experimentation, evaluation, and Random Forest training that provided the foundation for the deployed application.
 
